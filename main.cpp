@@ -4,10 +4,14 @@
 #include <cstring>
 #include <cstdlib>
 #include <cstdint>
+#include <vector>
+
 
 int main( int argc, char **argv ) {
 
   // TODO: implement
+
+
 
   if (argc != 4) {
     printf("Invalid Input.");
