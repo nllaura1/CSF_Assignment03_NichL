@@ -15,25 +15,25 @@ int main( int argc, char **argv ) {
     
     //input from command line
     if (argc != 5) {
-        printf("Invalid Input.");
+        std::cerr << "Invalid Input - invalid # of commands" << std::endl;
         return -1;
     }
     //number of sets
     int numSets = argv[1];
     if (!isPowerOfTwo(numSets)) {
-        printf("Invalid Input.");
+        std::cerr << "Invalid Input - invalid number of sets" << std::endl;
         return -1;
     }
     //number of blocks
     int numBlocks = argv[2];
     if (!isPowerOfTwo(numBlocks)) {
-        printf("Invalid Input.");
+        std::cerr << "Invalid Input - invalid number of blocks" << std::endl;
         return -1;
     }
     //block byte size
     int blockSize = argv[3];
     if (!isPowerOfTwo(blockSize) || blockSize < 4) {
-        printf("Invalid Input.");
+        std::cerr << "Invalid Input - invalid block size" << std::endl;
         return -1;
     }
     //cache allocation preference
@@ -46,7 +46,7 @@ int main( int argc, char **argv ) {
         //set preference
         allocatePref = 1;
     } else {
-        printf("Invalid Input.");
+        std::cerr << "Invalid Input - must provide allocate preference" << std::endl;
         return -1;
     }
     //write preference
@@ -59,7 +59,7 @@ int main( int argc, char **argv ) {
         //set preference
         writePref = 1;
     } else {
-        printf("Invalid Input.");
+        std::cerr << "Invalid Input - must provide write preference" << std::endl;
         return -1;
     }
 
