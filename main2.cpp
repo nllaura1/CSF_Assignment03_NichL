@@ -37,11 +37,14 @@ int main( int argc, char **argv ) {
         return -1;
     }
     //cache allocation preference
-    std::string allocatePref = argv[4];
-    if (allocatePref == "write-allocate") {
+    std::string allocatePrefString = argv[4];
+    uint8_t allocatePref = 0;
+    if (allocatePrefString == "write-allocate") {
         //set preference
-    } else if (allocatePref == "write-allocate"){
+        allocatePref = 0;
+    } else if (allocatePrefString == "no-write-allocate"){
         //set preference
+        allocatePref = 1;
     } else {
         printf("Invalid Input.");
         return -1;
