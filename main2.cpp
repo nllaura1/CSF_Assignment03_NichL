@@ -50,14 +50,29 @@ int main( int argc, char **argv ) {
         return -1;
     }
     //write preference
-    std::string writePref = argv[5];
-    if (writePref == "write-back") {
+    std::string writePrefString = argv[5];
+    uint8_t writePref = 0;
+    if (writePrefString == "write-back") {
         //set preference
-    } else if (writePref == "write-through"){
+        writePref = 0;
+    } else if (writePrefString == "write-through"){
         //set preference
+        writePref = 1;
     } else {
         printf("Invalid Input.");
         return -1;
+    }
+
+    // Read until there's no more input
+    char op;
+    unsigned int address;
+    int value;
+    
+    while (std::cin >> op >> std::hex >> address >> std::dec >> value) {
+        // op holds the char, address holds the hex address, and value holds the integer
+        std::cout << "Operation: " << op
+                  << ", Address: 0x" << std::hex << address << std::dec
+                  << ", Value: " << value << std::endl;
     }
 
 
