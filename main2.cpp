@@ -84,13 +84,10 @@ int main( int argc, char **argv ) {
     char op;
     unsigned int address;
     int value;
-    
     while (std::cin >> op >> std::hex >> address >> std::dec >> value) {
-        // op holds the char, address holds the hex address, and value holds the integer
-        std::cout << "Operation: " << op
-                  << ", Address: 0x" << std::hex << address << std::dec
-                  << ", Value: " << value << std::endl;
+        //Perform cache operations
     }
 
+    return 0;
 
 }
