@@ -4,9 +4,9 @@
 #include "Cache.h"
 
 int parseReplacementPolicy(const std::string& s) {
-    if (s == "lru") {
+    if (s == "fifo") {
         return 0;
-    } else if (s == "fifo") {
+    } else if (s == "lru") {
         return 1;
     } {
         return -1;
@@ -69,7 +69,7 @@ int main(int argc, char* argv[]) {
     int write = parseWritePolicy(argv[5]);
     int repl = parseReplacementPolicy(argv[6]);
     //check for valid input
-    if (alloc < 0 || write < 0|| repl <0) {
+    if (alloc < 0 || write < 0|| repl < 0) {
         std::cerr << "Invalid Input - must provide valid policies" << std::endl;
         return -1;  
     }
@@ -89,7 +89,7 @@ int main(int argc, char* argv[]) {
         iss >> op >> addrStr >> size;
 
         uint32_t addr = std::stoul(addrStr, nullptr, 16);
-        cache.access(op, addr);
+        cache.access(op, addr, blockSize);
     }
 
     //simulation finished

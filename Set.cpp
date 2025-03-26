@@ -2,11 +2,12 @@
 #include <algorithm>
 
 Set::Set(int associativity, int policy)
-    : policy(policy), blocks(associativity) {}
+    : blocks(associativity), policy(policy) {}
 
 bool Set::access(uint32_t tag, bool isWrite, bool& hit, bool& dirtyEvict) {
     Block* blk = findBlock(tag);
-    if (blk && blk->valid) {
+
+    if (blk) {
         hit = true;
         if (isWrite) blk->dirty = true;
         updateLRU(blk);
@@ -36,13 +37,14 @@ Block* Set::selectVictim() {
         if (!blk.valid) return &blk;
     }
 
-    if (policy == 0) {
+
+    if (policy == 0) { //fifo 
+        return &blocks[0]; // FIFO 
+    } else {
         return &*std::min_element(blocks.begin(), blocks.end(), [](const Block& a, const Block& b) {
             return a.lruCounter < b.lruCounter;
         });
     }
-
-    return &blocks[0]; // FIFO default
 }
 
 void Set::updateLRU(Block* accessed) {

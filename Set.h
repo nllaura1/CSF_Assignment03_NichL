@@ -13,7 +13,7 @@ public:
 
 private:
     std::vector<Block> blocks;
-    int policy; //0 - lru, 1 - fifo
+    int policy; //0 - fifo, 1 - lru
     int accessCounter = 0; // For LRU
 
     Block* findBlock(uint32_t tag);

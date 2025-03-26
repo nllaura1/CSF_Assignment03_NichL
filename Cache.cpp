@@ -17,13 +17,14 @@ Cache::Cache(int numSets, int blockSize, int associativity,
     }
 }
 
-void Cache::access(char operation, uint32_t address) {
+void Cache::access(char operation, uint32_t address, int size) {
     uint32_t index = extractIndex(address);
     uint32_t tag = extractTag(address);
     Set& set = sets[index];
 
     bool hit = false;
     bool dirtyEvict = false;
+    int memCycles = 100 * ((size) / 4); 
 
     if (operation == 'l') {
         totalLoads++;
@@ -34,7 +35,7 @@ void Cache::access(char operation, uint32_t address) {
         } else {
             loadMisses++;
             set.insert(tag, false);
-            totalCycles += 100; // miss penalty
+            totalCycles += memCycles + 1; // miss penalty
         }
     } else if (operation == 's') {
         totalStores++;
@@ -44,22 +45,21 @@ void Cache::access(char operation, uint32_t address) {
             if (writePolicy == 0) { // write-back
                 totalCycles += 1;
             } else { // write-through
-                totalCycles += 101; // 1 for cache + 100 for memory
+                totalCycles += 1 + memCycles; // 1 for cache + 100 for memory
             }
         } else {
             storeMisses++;
-            if (allocationPolicy == 0) {
+            if (allocationPolicy == 0) { //write-allocate
                 set.insert(tag, true);
-                totalCycles += 100; // miss penalty
-                if (writePolicy == 1) totalCycles += 1; // extra cycle for write-through after insert
+                totalCycles += memCycles + 1; // miss penalty
             } else {
-                totalCycles += 100; // no-write-allocate miss, only memory write
+                totalCycles += memCycles; // no-write-allocate miss, only memory write
             }
         }
 
         // If no-write-allocate and miss then skip insert
         if (hit && dirtyEvict && writePolicy == 0) {
-            totalCycles += 100; // write-back dirty eviction cost
+            totalCycles += memCycles; // write-back dirty eviction cost
         }
     }
 }

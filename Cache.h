@@ -9,7 +9,7 @@ class Cache {
 public:
     Cache(int numSets, int blockSize, int associativity,
           int rPolicy, int wPolicy, int allocPolicy);
-    void access(char operation, uint32_t address);
+    void access(char operation, uint32_t address, int size);
 
     //Statistics tracking
     int totalLoads = 0;
@@ -24,7 +24,7 @@ private:
     int numSets;
     int blockSize;
     int associativity;
-    int replacementPolicy; //0 - lru, 1 - fifo
+    int replacementPolicy; //0 - fifo, 1 - lru
     int writePolicy; //0 - write-back, 1 - write-through
     int allocationPolicy; //0 write-allocate, 1 - no-write-allocate
 
