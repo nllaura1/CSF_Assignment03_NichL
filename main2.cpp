@@ -80,6 +80,9 @@ int main( int argc, char **argv ) {
         }
     }
 
+    Cache cache(numSets, numBlocks, , , );
+    Cache(int cacheSize, int blockSize, int associativity, string, bool );
+
     // Read until there's no more input
     char op;
     unsigned int address;
