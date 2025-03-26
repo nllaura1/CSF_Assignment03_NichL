@@ -30,7 +30,7 @@ void Cache::access(char operation, uint32_t address) {
         if (!hit) set.insert(tag, false);
     } else if (operation == 's') {
         set.access(tag, true, hit, dirtyEvict);
-        if (!hit && allocationPolicy == AllocationPolicy::WRITE_ALLOCATE) {
+        if (!hit && allocationPolicy == 0) {
             set.insert(tag, true);
         }
         // If NO_WRITE_ALLOCATE and miss, skip insert
