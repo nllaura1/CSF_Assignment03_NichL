@@ -3,10 +3,10 @@
 #include <iostream>
 
 Cache::Cache(int numSets, int blockSize, int associativity,
-             ReplacementPolicy rPolicy, WritePolicy wPolicy, AllocationPolicy allocPolicy)
+             int rPolicy, int wPolicy, int allocPolicy)
     : numSets(numSets), blockSize(blockSize), associativity(associativity),
       replacementPolicy(rPolicy), writePolicy(wPolicy), allocationPolicy(allocPolicy) {
-
+        
     offsetBits = static_cast<int>(std::log2(blockSize));
     indexBits = static_cast<int>(std::log2(numSets));
     indexMask = (1 << indexBits) - 1;
