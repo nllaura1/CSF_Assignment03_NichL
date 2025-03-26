@@ -1,7 +1,7 @@
 #include "Set.h"
 #include <algorithm>
 
-Set::Set(int associativity, ReplacementPolicy policy)
+Set::Set(int associativity, int policy)
     : policy(policy), blocks(associativity) {}
 
 bool Set::access(uint32_t tag, bool isWrite, bool& hit, bool& dirtyEvict) {
@@ -36,7 +36,7 @@ Block* Set::selectVictim() {
         if (!blk.valid) return &blk;
     }
 
-    if (policy == ReplacementPolicy::LRU) {
+    if (policy == 0) {
         return &*std::min_element(blocks.begin(), blocks.end(), [](const Block& a, const Block& b) {
             return a.lruCounter < b.lruCounter;
         });

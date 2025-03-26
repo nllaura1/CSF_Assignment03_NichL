@@ -7,16 +7,15 @@
 
 class Set {
 public:
-    Set(int associativity, bool evictPref);
+    Set(int associativity, int policy);
 
-    bool access(uint32_t tag, bool isWrite);
+    bool access(uint32_t tag, bool isWrite, bool& hit, bool& dirtyEvict);
     void insert(uint32_t tag, bool isWrite);
 
 private:
     std::vector<Block> blocks;
-    bool evictPref;
-    //for lru
-    int accessCounter = 0;
+    int policy; //0 - lru, 1 - fifo
+    int accessCounter = 0; // For LRU
 
     Block* findBlock(uint32_t tag);
     Block* selectVictim();
