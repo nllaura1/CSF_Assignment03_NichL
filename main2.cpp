@@ -38,26 +38,26 @@ int main( int argc, char **argv ) {
     }
     //cache allocation preference
     std::string allocatePrefString = argv[4];
-    uint8_t allocatePref = 0;
+    bool allocatePref = false;
     if (allocatePrefString == "write-allocate") {
         //set preference
-        allocatePref = 0;
+        allocatePref = false;
     } else if (allocatePrefString == "no-write-allocate"){
         //set preference
-        allocatePref = 1;
+        allocatePref = true;
     } else {
         std::cerr << "Invalid Input - must provide allocate preference" << std::endl;
         return -1;
     }
     //write preference
     std::string writePrefString = argv[5];
-    uint8_t writePref = 0;
+    bool writePref = false;
     if (writePrefString == "write-back") {
         //set preference
-        writePref = 0;
+        writePref = false;
     } else if (writePrefString == "write-through"){
         //set preference
-        writePref = 1;
+        writePref = true;
     } else {
         std::cerr << "Invalid Input - must provide write preference" << std::endl;
         return -1;
