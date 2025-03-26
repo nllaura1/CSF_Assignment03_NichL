@@ -1,10 +1,12 @@
 #include "Cache.h"
 #include <cmath>
+#include <iostream>
 
-Cache::Cache(int cacheSize, int blockSize, int associativity, std::string evictPrefString)
-    : size(cacheSize), blockSize(blockSize), associativity(associativity), replacementPolicy(policy) {
+Cache::Cache(int numSets, int blockSize, int associativity,
+             ReplacementPolicy rPolicy, WritePolicy wPolicy, AllocationPolicy allocPolicy)
+    : numSets(numSets), blockSize(blockSize), associativity(associativity),
+      replacementPolicy(rPolicy), writePolicy(wPolicy), allocationPolicy(allocPolicy) {
 
-    numSets = cacheSize / (blockSize * associativity);
     offsetBits = static_cast<int>(std::log2(blockSize));
     indexBits = static_cast<int>(std::log2(numSets));
     indexMask = (1 << indexBits) - 1;
@@ -15,16 +17,24 @@ Cache::Cache(int cacheSize, int blockSize, int associativity, std::string evictP
     }
 }
 
-bool Cache::read(uint32_t address) {
+void Cache::access(char operation, uint32_t address) {
     uint32_t index = extractIndex(address);
     uint32_t tag = extractTag(address);
-    return sets[index].access(tag, false);
-}
+    Set& set = sets[index];
 
-bool Cache::write(uint32_t address) {
-    uint32_t index = extractIndex(address);
-    uint32_t tag = extractTag(address);
-    return sets[index].access(tag, true);
+    bool hit = false;
+    bool dirtyEvict = false;
+
+    if (operation == 'l') {
+        set.access(tag, false, hit, dirtyEvict);
+        if (!hit) set.insert(tag, false);
+    } else if (operation == 's') {
+        set.access(tag, true, hit, dirtyEvict);
+        if (!hit && allocationPolicy == AllocationPolicy::WRITE_ALLOCATE) {
+            set.insert(tag, true);
+        }
+        // If NO_WRITE_ALLOCATE and miss, skip insert
+    }
 }
 
 uint32_t Cache::extractIndex(uint32_t address) {

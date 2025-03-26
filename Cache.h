@@ -4,23 +4,20 @@
 #include <vector>
 #include <cstdint>
 #include "Set.h"
-#include <cstring> 
 
 class Cache {
 public:
-    Cache(int cacheSize, int blockSize, int associativity, std::string evictPrefString);
-
-    bool read(uint32_t address);
-    bool write(uint32_t address);
+    Cache(int numSets, int blockSize, int associativity,
+          int rPolicy, int wPolicy, int allocPolicy);
+    void access(char operation, uint32_t address);
 
 private:
-    int size;
+    int numSets;
     int blockSize;
     int associativity;
-    int numSets;
-    int evictPref;
-    // lru = 0
-    //fifo = 1
+    int replacementPolicy; //0 - lru, 1 - fifo
+    int writePolicy; //0 - write-back, 1 - write-through
+    int allocationPolicy; //0 write-allocate, 1 - no-write-allocate
 
     std::vector<Set> sets;
 

@@ -4,13 +4,15 @@
 Set::Set(int associativity, ReplacementPolicy policy)
     : policy(policy), blocks(associativity) {}
 
-bool Set::access(uint32_t tag, bool isWrite) {
+bool Set::access(uint32_t tag, bool isWrite, bool& hit, bool& dirtyEvict) {
     Block* blk = findBlock(tag);
     if (blk && blk->valid) {
+        hit = true;
         if (isWrite) blk->dirty = true;
         updateLRU(blk);
-        return true;
+        return blk->dirty;
     }
+    hit = false;
     return false;
 }
 
@@ -40,7 +42,7 @@ Block* Set::selectVictim() {
         });
     }
 
-    return &blocks[0]; // FIFO / RANDOM default
+    return &blocks[0]; // FIFO default
 }
 
 void Set::updateLRU(Block* accessed) {
