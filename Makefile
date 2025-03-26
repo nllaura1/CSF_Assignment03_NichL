@@ -2,7 +2,7 @@ CXX = g++
 CXXFLAGS = -g -Wall -Wextra -pedantic -std=c++17
 
 # Add any additional source files here
-SRCS = main.cpp
+SRCS = main.cpp Cache.cpp Set.cpp
 OBJS = $(SRCS:.cpp=.o)
 
 # When submitting to Gradescope, submit all .cpp and .h files,

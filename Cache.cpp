@@ -26,14 +26,41 @@ void Cache::access(char operation, uint32_t address) {
     bool dirtyEvict = false;
 
     if (operation == 'l') {
+        totalLoads++;
         set.access(tag, false, hit, dirtyEvict);
-        if (!hit) set.insert(tag, false);
-    } else if (operation == 's') {
-        set.access(tag, true, hit, dirtyEvict);
-        if (!hit && allocationPolicy == 0) {
-            set.insert(tag, true);
+        if (hit) {
+            loadHits++;
+            totalCycles += 1;
+        } else {
+            loadMisses++;
+            set.insert(tag, false);
+            totalCycles += 100; // miss penalty
         }
-        // If NO_WRITE_ALLOCATE and miss, skip insert
+    } else if (operation == 's') {
+        totalStores++;
+        set.access(tag, true, hit, dirtyEvict);
+        if (hit) {
+            storeHits++;
+            if (writePolicy == 0) { // write-back
+                totalCycles += 1;
+            } else { // write-through
+                totalCycles += 101; // 1 for cache + 100 for memory
+            }
+        } else {
+            storeMisses++;
+            if (allocationPolicy == 0) {
+                set.insert(tag, true);
+                totalCycles += 100; // miss penalty
+                if (writePolicy == 1) totalCycles += 1; // extra cycle for write-through after insert
+            } else {
+                totalCycles += 100; // no-write-allocate miss, only memory write
+            }
+        }
+
+        // If no-write-allocate and miss then skip insert
+        if (hit && dirtyEvict && writePolicy == 0) {
+            totalCycles += 100; // write-back dirty eviction cost
+        }
     }
 }
 

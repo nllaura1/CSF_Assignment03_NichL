@@ -2,7 +2,6 @@
 #include <sstream>
 #include <string>
 #include "Cache.h"
-#include "config.h"
 
 int parseReplacementPolicy(const std::string& s) {
     if (s == "lru") {
@@ -54,7 +53,7 @@ int main(int argc, char* argv[]) {
         return -1;
     }
 
-    int blocks = std::stoi(argv[2]);
+    int numBlocks = std::stoi(argv[2]);
     if (!isPowerOfTwo(numBlocks)) {
         std::cerr << "Invalid Input - invalid number of blocks" << std::endl;
         return -1;
@@ -76,7 +75,7 @@ int main(int argc, char* argv[]) {
     }
 
     //initialize cache
-    Cache cache(numSets, blockSize, blocks, repl, write, alloc);
+    Cache cache(numSets, blockSize, numBlocks, repl, write, alloc);
 
     //begin accepting commands
     std::string line;
@@ -94,5 +93,13 @@ int main(int argc, char* argv[]) {
     }
 
     std::cout << "Simulation finished.\n";
+    std::cout << "Total loads: " << cache.totalLoads << '\n';
+    std::cout << "Total stores: " << cache.totalStores << '\n';
+    std::cout << "Load hits: " << cache.loadHits << '\n';
+    std::cout << "Load misses: " << cache.loadMisses << '\n';
+    std::cout << "Store hits: " << cache.storeHits << '\n';
+    std::cout << "Store misses: " << cache.storeMisses << '\n';
+    std::cout << "Total cycles: " << cache.totalCycles << '\n';
+
     return 0;
 }

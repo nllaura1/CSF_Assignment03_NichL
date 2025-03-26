@@ -3,7 +3,6 @@
 
 #include <vector>
 #include "Block.h"
-#include "config.h"
 
 class Set {
 public:

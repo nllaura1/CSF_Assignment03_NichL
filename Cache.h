@@ -11,6 +11,15 @@ public:
           int rPolicy, int wPolicy, int allocPolicy);
     void access(char operation, uint32_t address);
 
+    //Statistics tracking
+    int totalLoads = 0;
+    int totalStores = 0;
+    int loadHits = 0;
+    int loadMisses = 0;
+    int storeHits = 0;
+    int storeMisses = 0;
+    int totalCycles = 0;
+
 private:
     int numSets;
     int blockSize;
