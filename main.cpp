@@ -92,7 +92,7 @@ int main(int argc, char* argv[]) {
         cache.access(op, addr);
     }
 
-    std::cout << "Simulation finished.\n";
+    //simulation finished
     std::cout << "Total loads: " << cache.totalLoads << '\n';
     std::cout << "Total stores: " << cache.totalStores << '\n';
     std::cout << "Load hits: " << cache.loadHits << '\n';
