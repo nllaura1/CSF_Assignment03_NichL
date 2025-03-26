@@ -4,10 +4,11 @@
 #include <vector>
 #include <cstdint>
 #include "Set.h"
+#include <cstring> 
 
 class Cache {
 public:
-    Cache(int cacheSize, int blockSize, int associativity, bool lru, bool );
+    Cache(int cacheSize, int blockSize, int associativity, std::string evictPrefString);
 
     bool read(uint32_t address);
     bool write(uint32_t address);
