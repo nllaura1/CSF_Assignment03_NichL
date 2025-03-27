@@ -89,7 +89,7 @@ int main(int argc, char* argv[]) {
         iss >> op >> addrStr >> size;
 
         uint32_t addr = std::stoul(addrStr, nullptr, 16);
-        cache.access(op, addr, blockSize);
+        cache.access(op, addr);
     }
 
     //simulation finished

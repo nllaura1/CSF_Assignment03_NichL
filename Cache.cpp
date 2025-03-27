@@ -17,14 +17,14 @@ Cache::Cache(int numSets, int blockSize, int associativity,
     }
 }
 
-void Cache::access(char operation, uint32_t address, int size) {
+void Cache::access(char operation, uint32_t address) {
     uint32_t index = extractIndex(address);
     uint32_t tag = extractTag(address);
     Set& set = sets[index];
 
     bool hit = false;
     bool dirtyEvict = false;
-    int memCycles = 100 * ((size) / 4); 
+    int memCycles = 100 * ((blockSize) / 4); 
 
     if (operation == 'l') {
         totalLoads++;
@@ -34,7 +34,8 @@ void Cache::access(char operation, uint32_t address, int size) {
             totalCycles += 1;
         } else {
             loadMisses++;
-            set.insert(tag, false);
+            bool dummyEvict = false;
+            set.insert(tag, false, dummyEvict);
             totalCycles += memCycles + 1; // miss penalty
         }
     } else if (operation == 's') {
@@ -48,13 +49,27 @@ void Cache::access(char operation, uint32_t address, int size) {
                 totalCycles += 1 + memCycles; // 1 for cache + 100 for memory
             }
         } else {
+            
             storeMisses++;
-            if (allocationPolicy == 0) { //write-allocate
-                set.insert(tag, true);
-                totalCycles += memCycles + 1; // miss penalty
+
+            if (allocationPolicy == 0) { // write-allocate
+                bool dirtyEvict = false;
+                set.insert(tag, true, dirtyEvict);
+            
+                totalCycles += memCycles + 1; // read block into cache and store
+                if (writePolicy == 1) { // write-through: write to memory too
+                    totalCycles += memCycles;
+                }
+            
+                if (dirtyEvict && writePolicy == 0) { // write-back dirty eviction
+                    totalCycles += memCycles;
+                }
             } else {
-                totalCycles += memCycles; // no-write-allocate miss, only memory write
+                // no-write-allocate: don't load block into cache
+                totalCycles += memCycles; // write directly to memory only
             }
+            
+
         }
 
         // If no-write-allocate and miss then skip insert

@@ -9,7 +9,8 @@ public:
     Set(int associativity, int policy);
 
     bool access(uint32_t tag, bool isWrite, bool& hit, bool& dirtyEvict);
-    void insert(uint32_t tag, bool isWrite);
+    bool insert(uint32_t tag, bool isWrite, bool& dirtyEvict);
+
 
 private:
     std::vector<Block> blocks;

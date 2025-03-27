@@ -17,12 +17,15 @@ bool Set::access(uint32_t tag, bool isWrite, bool& hit, bool& dirtyEvict) {
     return false;
 }
 
-void Set::insert(uint32_t tag, bool isWrite) {
+bool Set::insert(uint32_t tag, bool isWrite, bool& dirtyEvict) {
     Block* victim = selectVictim();
+    dirtyEvict = victim->valid && victim->dirty; // notify eviction of dirty block
+
     victim->valid = true;
     victim->tag = tag;
     victim->dirty = isWrite;
     updateLRU(victim);
+    return dirtyEvict;
 }
 
 Block* Set::findBlock(uint32_t tag) {

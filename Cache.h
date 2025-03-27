@@ -9,7 +9,7 @@ class Cache {
 public:
     Cache(int numSets, int blockSize, int associativity,
           int rPolicy, int wPolicy, int allocPolicy);
-    void access(char operation, uint32_t address, int size);
+    void access(char operation, uint32_t address);
 
     //Statistics tracking
     int totalLoads = 0;
