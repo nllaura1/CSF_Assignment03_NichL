@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "Block.h"
+#include <deque>
 
 class Set {
 public:
@@ -14,6 +15,7 @@ public:
 
 private:
     std::vector<Block> blocks;
+    std::deque<Block*> fifoQueue; //fifo
     int policy; //0 - fifo, 1 - lru
     int accessCounter = 0; // For LRU
 

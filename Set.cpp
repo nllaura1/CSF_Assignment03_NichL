@@ -1,5 +1,6 @@
 #include "Set.h"
 #include <algorithm>
+#include <deque>
 
 Set::Set(int associativity, int policy)
     : blocks(associativity), policy(policy) {}
@@ -20,6 +21,16 @@ bool Set::access(uint32_t tag, bool isWrite, bool& hit, bool& dirtyEvict) {
 bool Set::insert(uint32_t tag, bool isWrite, bool& dirtyEvict) {
     Block* victim = selectVictim();
     dirtyEvict = victim->valid && victim->dirty; // notify eviction of dirty block
+
+    // Update FIFO queue only for FIFO policy
+    if (policy == 0) {
+        // If the victim is valid, it's being evicted — remove from front
+        if (victim->valid && !fifoQueue.empty() && fifoQueue.front() == victim) {
+            fifoQueue.pop_front();
+        }
+        // Add the new or reused block to the back
+        fifoQueue.push_back(victim);
+    }
 
     victim->valid = true;
     victim->tag = tag;
@@ -42,7 +53,8 @@ Block* Set::selectVictim() {
 
 
     if (policy == 0) { //fifo 
-        return &blocks[0]; // FIFO 
+        //return &blocks[0]; // FIFO 
+        return fifoQueue.front();
     } else {
         return &*std::min_element(blocks.begin(), blocks.end(), [](const Block& a, const Block& b) {
             return a.lruCounter < b.lruCounter;
