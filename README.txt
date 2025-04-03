@@ -1,4 +1,5 @@
-Nicholas
+Nicholas Llaurado
+My partner was Kay Leen however she dropped the class after ms1. All work since then has been produced by me.
 
 To test the cache simulator, I decided to first experiment by going through each trace file and running different configurations on the same trace to see how they compare.
 First, I wanted to test the differences in output between LRU and FIFO. After running the same parameters for each of the trace files for lru and fifo, I saw that fifo consistently has a higher miss rate of about 20% on average, going up to 2x that of lru.
@@ -11,5 +12,21 @@ Total cycles were mostly unaffected by these configuration changes. Occasionally
 From this testing I can conclude that no-write-allocate results in less efficient cache performance as it consistently produces a higher miss rate.
 
 The next step was testing wether or not write-through or write-back would create better results when paired with write-allocate. 
+After running all of the test files on a cache configuration with write-allocate and alternating write-back and write-through, I quickly found that write-back consistently produces fewer total cylces than write-through. The miss and hit rates are mostly unaffected by these changes. 
+Write-through produces up to 3x more total cycles than write-back on average. This results in less efficient cache performance. Write back can be identified as the more efficeint solution. 
 
+The last steps were to determine the optimal number of sets, blocks, and number of bytes. First, I ran the different test files while altering the number of sets. I started at the lowest number, 1 and progresssively increased the number of sets up to 8192. 
+I found that as the number of sets goes, up the hit rate increases and the miss rate decreases. Total cylces also decreases as set number increases. This shows that higher set number is optimal. The optimal number of sets should be maximized. 
+As the number of blocks increases, the total number of cycle decreases significantly as well as the miss rate. Hit rate is unaffected for the most part. I tested values all the way from 1 to 8192. This value should be maximized.
+However, as the number of bytes in each block increases, total cylces and miss rate increases. This value should be minimized. 
+
+Overall, from this testing the best configuration is as follows:
+number of sets: 256 - 8192
+number of blocks: 256 - 8192
+number of bytes in block: 4 - 16
+write-allocate
+write-back
+lru
+
+This configuration produces the lowest miss rate and total cylces and maximizes hit rate.
 
